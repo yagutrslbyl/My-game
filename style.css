@@ -50,8 +50,40 @@ body {
 /* Gəmi Emojisinin özü */
 .player::after {
     content: "🚢";
-    font-size: 35px; /* Ölçünü bir az böyütdük ki, ekranda qəşəng görünsün */
+    font-size: 45px; /* Ölçünü bir az böyütdük ki, ekranda qəşəng görünsün */
     position: absolute;
     /* Gəminin standart baxış istiqaməti sola olduğu üçün onu sağa (hərəkət istiqamətinə) döndəririk */
     transform: scaleX(-1); 
+}
+
+/* --- Gəminin (Player) Şəkil Dizaynı --- */
+.player {
+    width: 65px;  /* Şəkil üçün ideal ölçü */
+    height: 45px;
+    position: absolute;
+    /* Gəmi şəkli (Sola baxırsa, scaleX(-1) ilə sağa çeviririk) */
+    background-image: url('https://img.icons8.com/fluency/96/ship.png'); 
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    transform: scaleX(-1); /* Gəminin üzünü hərəkət istiqamətinə (sağa) çevirir */
+    transition: top 0.1s linear, left 0.1s linear;
+}
+
+/* --- Köpək Balığı (Enemy) Şəkil Dizaynı --- */
+.enemy {
+    width: 70px;  /* Köpək balığı gəmidən bir az böyük və qorxulu olsun */
+    height: 50px;
+    position: absolute;
+    /* Düz və qəzəbli görünən köpək balığı şəkli */
+    background-image: url('https://img.icons8.com/stickers/100/shark.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    
+    /* Gəmiyə doğru düz uzanması və sola baxması üçün tənzimləmə */
+    transform: scaleX(1); 
+    
+    /* Sənin istədiyin o qəzəbli, qırmızı aura effekti */
+    filter: drop-shadow(-5px 0px 8px rgba(255, 0, 0, 0.8));
 }

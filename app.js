@@ -4,8 +4,8 @@ const gameBoard = document.getElementById('game-board');
 // 1. Gəmi (Player) Klassı
 class Player {
     constructor() {
-        this.width = 50;
-        this.height = 30;
+        this.width = 60;
+        this.height = 40;
         // Gəminin ilkin koordinatları (Ekranın sol tərəfində, ortada)
         this.x = 50;
         this.y = 235; 
@@ -82,3 +82,76 @@ window.addEventListener('keydown', (event) => {
             break;
     }
 });
+
+// Aktiv köpək balıqlarını saxlamaq üçün massiv
+const enemies = [];
+
+// 1. Köpək Balığı (Enemy) Klassı
+class Enemy {
+    constructor() {
+        this.width = 30;
+        this.height = 30;
+        
+        // Köpək balığı ekranın tam sağından (kənarından) başlayır
+        this.x = gameBoard.clientWidth; 
+        
+        // Yuxarıdan aşağıya təsadüfi (random) bir hündürlükdə yaransın
+        this.y = Math.random() * (gameBoard.clientHeight - this.height);
+        
+        // Hər köpək balığının sürəti fərqli və təsadüfi olsun (məsələn, 2 ilə 5 arası)
+        this.speed = Math.random() * 3 + 2; 
+
+        // DOM elementi yaradırıq
+        this.element = document.createElement('div');
+        this.element.classList.add('enemy');
+        this.updatePosition();
+        gameBoard.appendChild(this.element);
+    }
+
+    // Ekrandakı yerini yeniləyir
+    updatePosition() {
+        this.element.style.left = this.x + 'px';
+        this.element.style.top = this.y + 'px';
+    }
+
+    // Sola doğru hərəkət metodu
+    move() {
+        this.x -= this.speed;
+        this.updatePosition();
+    }
+
+    // Əgər ekrandan çıxıbsa, elementi silirik
+    isOutOfBounds() {
+        return this.x + this.width < 0;
+    }
+
+    // Elementi həm ekrandan, həm yaddaşdan silmək üçün
+    destroy() {
+        this.element.remove();
+    }
+}
+
+// 2. Müəyyən zaman aralığında (məsələn, hər 1.5 saniyədən bir) yeni köpək balığı yaradan funksiya
+setInterval(() => {
+    enemies.push(new Enemy());
+}, 1500);
+
+// 3. Oyun Döngüsü (Game Loop) - Hər freymdə düşmənləri hərəkət etdirir
+function gameLoop() {
+    for (let i = enemies.length - 1; i >= 0; i--) {
+        const enemy = enemies[i];
+        enemy.move();
+
+        // Ekrandan çıxan köpək balıqlarını təmizləyirik
+        if (enemy.isOutOfBounds()) {
+            enemy.destroy();
+            enemies.splice(i, 1); // Massivdən silirik
+        }
+    }
+
+    // Bu funksiya brauzerin hər ekran yenilənməsində (60fps) gameLoop-u işə salır
+    requestAnimationFrame(gameLoop);
+}
+
+// Oyun döngüsünü başladırıq
+gameLoop();
