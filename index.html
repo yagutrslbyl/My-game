@@ -9,7 +9,26 @@
 <body>
 
     <div id="game-container">
+        <div id="start-screen" class="overlay">
+            <h1>🌊 Ocean Voyager: Survival</h1>
+            <p>Köpək balıqlarından qaç və dənizdə sağ qal!</p>
+            <p><strong>İdarəetmə:</strong> W, A, S, D və ya Ox düymələri</p>
+            <button id="start-btn">Oyunu Başlat 🚢</button>
+        </div>
+
+        <div id="game-over-screen" class="overlay hidden">
+            <h1>💥 GAME OVER!</h1>
+            <p>Gəminiz batdı...</p>
+            <p>Topladığınız Xal: <span id="final-score">0</span></p>
+            <p>Yüksək Xal: <span id="high-score">0</span></p>
+            <button id="restart-btn">Yenidən Başla 🔄</button>
+        </div>
+
         <div id="game-board">
+            <div id="ui-panel">
+                <div id="hp-display">❤️ HP: <span id="hp-value">100</span>%</div>
+                <div id="score-display">⭐ Score: <span id="score-value">0</span></div>
+            </div>
             </div>
     </div>
 

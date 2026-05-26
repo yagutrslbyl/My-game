@@ -1,8 +1,24 @@
-// 1. Oyun sahəsini seçirik
+// 1. DOM Elementləri
 const gameBoard = document.getElementById('game-board');
-const enemies = [];
+const hpValueEl = document.getElementById('hp-value');
+const scoreValueEl = document.getElementById('score-value');
+const startScreen = document.getElementById('start-screen');
+const gameOverScreen = document.getElementById('game-over-screen');
+const finalScoreEl = document.getElementById('final-score');
+const highScoreEl = document.getElementById('high-score');
+const startBtn = document.getElementById('start-btn');
+const restartBtn = document.getElementById('restart-btn');
 
-// 2. Gəmi (Player) Klassı
+// 2. Oyun Vəziyyəti (State) Dəyişənləri
+let player = null;
+let enemies = [];
+let hp = 100;
+let score = 0;
+let isGameOver = true; // Oyun başlamazdan əvvəl döngü gözləsin diye true edirik
+let spawnInterval = null;
+let scoreInterval = null;
+
+// 3. Gəmi (Player) Klassı
 class Player {
     constructor() {
         this.width = 65;   
@@ -23,42 +39,46 @@ class Player {
     }
 
     moveUp() {
-        if (this.y > 0) {
+        if (!isGameOver && this.y > 0) {
             this.y -= this.speed;
             this.updatePosition();
         }
     }
 
     moveDown() {
-        if (this.y < gameBoard.clientHeight - this.height) {
+        if (!isGameOver && this.y < gameBoard.clientHeight - this.height) {
             this.y += this.speed;
             this.updatePosition();
         }
     }
 
     moveLeft() {
-        if (this.x > 0) {
+        if (!isGameOver && this.x > 0) {
             this.x -= this.speed;
             this.updatePosition();
         }
     }
 
     moveRight() {
-        if (this.x < gameBoard.clientWidth - this.width) {
+        if (!isGameOver && this.x < gameBoard.clientWidth - this.width) {
             this.x += this.speed;
             this.updatePosition();
         }
     }
+
+    destroy() {
+        if (this.element) this.element.remove();
+    }
 }
 
-// 3. Köpək Balığı (Enemy) Klassı
+// 4. Köpək Balığı (Enemy) Klassı
 class Enemy {
     constructor() {
         this.width = 70;   
         this.height = 50;  
-        this.x = gameBoard.clientWidth; // Sağ kənardan başlayır
+        this.x = gameBoard.clientWidth; 
         this.y = Math.random() * (gameBoard.clientHeight - this.height);
-        this.speed = Math.random() * 3 + 2; // Təsadüfi sürət
+        this.speed = Math.random() * 3 + 2; 
 
         this.element = document.createElement('div');
         this.element.classList.add('enemy');
@@ -81,14 +101,11 @@ class Enemy {
     }
 
     destroy() {
-        this.element.remove();
+        if (this.element) this.element.remove();
     }
 }
 
-// 4. Oyunu başladırıq və Player yaradırıq
-const player = new Player();
-
-// 5. Toqquşmanı yoxlayan funksiya
+// 5. Toqquşma detektoru
 function checkCollision(rect1, rect2) {
     return (
         rect1.x < rect2.x + rect2.width &&
@@ -98,26 +115,73 @@ function checkCollision(rect1, rect2) {
     );
 }
 
-// 6. Hər 1.5 saniyədən bir köpək balığı yaradırıq
-setInterval(() => {
-    enemies.push(new Enemy());
-}, 1500);
+// 6. Oyunu Başlatma / Sıfırlama Funksiyası (Page Refresh Olmadan!)
+function initGame() {
+    // Köhnə elementləri təmizləyirik (əgər varsa)
+    if (player) player.destroy();
+    enemies.forEach(enemy => enemy.destroy());
+    enemies = [];
+
+    // Taymerləri təmizləyirik
+    clearInterval(spawnInterval);
+    clearInterval(scoreInterval);
+
+    // State sıfırlanması
+    hp = 100;
+    score = 0;
+    isGameOver = false;
+
+    // UI Yenilənməsi
+    hpValueEl.textContent = hp;
+    scoreValueEl.textContent = score;
+
+    // Ekranların gizlədilməsi
+    startScreen.classList.add('hidden');
+    gameOverScreen.classList.add('hidden');
+
+    // Yeni gəmi obyekti yaradırıq
+    player = new Player();
+
+    // Düşmən yaradılma taymeri
+    spawnInterval = setInterval(() => {
+        if (!isGameOver) enemies.push(new Enemy());
+    }, 1500);
+
+    // Xal artım taymeri
+    scoreInterval = setInterval(() => {
+        if (!isGameOver) {
+            score += 10;
+            scoreValueEl.textContent = score;
+        }
+    }, 1000);
+
+    // Oyun döngüsünü başladırıq
+    gameLoop();
+}
 
 // 7. Oyun Döngüsü (Game Loop)
 function gameLoop() {
+    if (isGameOver) return; 
+
     for (let i = enemies.length - 1; i >= 0; i--) {
         const enemy = enemies[i];
         enemy.move();
 
-        // Toqquşma yoxlanılması
         if (checkCollision(player, enemy)) {
-            console.log("💥 Gəmi köpək balığına çırpıldı!");
             enemy.destroy();
             enemies.splice(i, 1);
+            
+            hp -= 20;
+            if (hp < 0) hp = 0;
+            hpValueEl.textContent = hp;
+
+            if (hp <= 0) {
+                triggerGameOver();
+                return; // Döngüdən tam çıxırıq
+            }
             continue; 
         }
 
-        // Ekrandan çıxanları təmizləyirik
         if (enemy.isOutOfBounds()) {
             enemy.destroy();
             enemies.splice(i, 1);
@@ -127,11 +191,32 @@ function gameLoop() {
     requestAnimationFrame(gameLoop);
 }
 
-// Döngünü aktivləşdiririk
-gameLoop();
+// 8. Oyun Bitmə Məntiqi (Yüksək Xal Mexanikası Daxil)
+function triggerGameOver() {
+    isGameOver = true;
+    clearInterval(spawnInterval);
+    clearInterval(scoreInterval);
 
-// 8. Düymələri dinləyirik
+    // High Score hesabı (Persistence mərhələsi - localStorage)
+    let currentHighScore = localStorage.getItem('ocean_voyager_highscore') || 0;
+    if (score > currentHighScore) {
+        currentHighScore = score;
+        localStorage.setItem('ocean_voyager_highscore', currentHighScore);
+    }
+
+    // Game Over ekranını doldurub göstəririk
+    finalScoreEl.textContent = score;
+    highScoreEl.textContent = currentHighScore;
+    gameOverScreen.classList.remove('hidden');
+}
+
+// 9. Düymə Hadisələri (Event Listeners)
+startBtn.addEventListener('click', initGame);
+restartBtn.addEventListener('click', initGame);
+
 window.addEventListener('keydown', (event) => {
+    if (!player || isGameOver) return; // Oyun bitibsə hərəkət etməsin
+
     switch (event.key) {
         case 'ArrowUp': case 'w': case 'W':
             player.moveUp();
