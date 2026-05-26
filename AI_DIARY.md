@@ -31,3 +31,19 @@ The standard emojis looked too basic and childish for the intended game atmosphe
 I removed the emoji content from CSS and configured the divs to use real transparent PNG graphics. I used CSS filters (`drop-shadow`) to add a red angry aura around the sharks. Finally, I updated the bounding box variables in `app.js` (65x45 for the Ship, 70x50 for the Shark) to make sure the game logic aligns perfectly with the new image dimensions.
 
 **Time lost:** ~15 minutes
+
+### [2026-05-26] - Fix Shark Spawning and Game Loop Logic
+
+**What I asked the AI:**
+The sharks (enemies) are not appearing on the screen anymore while playing, and the console shows no errors. How to fix this?
+
+**What it gave me:**
+A consolidated and fully synchronized version of `app.js` ensuring that `setInterval`, `Enemy` instantiation, and the `gameLoop` animation frame work together harmoniously without overriding each other.
+
+**What was wrong:**
+During the transition from emojis to PNG images, fragments of the old positioning logic and the new collision updates caused a logical conflict. The enemies array was either not being populated correctly or the `gameLoop` function wasn't being correctly invoked at runtime, resulting in zero visible enemies despite no syntax errors in the console.
+
+**How I fixed it:**
+I completely wiped the conflicting `app.js` scripts and replaced them with a unified object-oriented structure where initialization, spawning timers, and collision loops are neatly separated and executed sequentially.
+
+**Time lost:** ~15 minutes
