@@ -1,3 +1,10 @@
+# AI Development Diary
+
+## AI Tools Used & Justification
+For this project, I used **Gemini (Free Version)** as my primary generative AI assistant. I chose this tool because it complies fully with the course guidelines regarding financial fairness (no paid features or credit cards required). Gemini is highly efficient at analyzing vanilla JavaScript code, understanding object-oriented structures, and debugging custom CSS rendering conflicts within raw DOM manipulation pipelines.
+
+---
+
 ### [2026-05-26] - Fix Ship Visuals (From Rectangle to Emoji)
 
 **What I asked the AI:**
@@ -32,6 +39,8 @@ I removed the emoji content from CSS and configured the divs to use real transpa
 
 **Time lost:** ~15 minutes
 
+---
+
 ### [2026-05-26] - Fix Shark Spawning and Game Loop Logic
 
 **What I asked the AI:**
@@ -48,26 +57,39 @@ I completely wiped the conflicting `app.js` scripts and replaced them with a uni
 
 **Time lost:** ~15 minutes
 
-2026-05-30 - Enemy spawning and game logic issues
+---
 
-What I asked the AI:
-I shared my full JavaScript game code and asked if there was any logical problem.
+### [2026-05-30] - Balanced Enemy Spawning and Refactoring
 
-What it gave me:
-The AI explained that my enemy spawning logic was unbalanced and my Whale spawn condition was poorly structured. It also provided a rewritten version of the spawn system.
+**What I asked the AI:**
+I shared my full JavaScript game code and asked if there was any hidden logical problem regarding spawn distributions.
 
-What was wrong:
+**What it gave me:**
+It explained that my enemy spawning logic was highly unbalanced, and the initial integration of the dynamic Whale spawn condition was poorly structured, mixed, and not reusable. It provided a rewritten version of the spawn framework.
 
-Whale enemy only appeared under strict conditions and felt inconsistent in gameplay
-Game balance was not clear
-Code structure was mixed and not reusable
+**What was wrong:**
+The dynamic enemy instantiation was inconsistent. The spawning pool lacked explicit conditional controls, making the overall game balance chaotic and failing to separate the basic shark behavior from advanced boss encounters properly.
 
-How I fixed it:
-I changed the spawn logic so that:
+**How I fixed it:**
+I modularized the spawning script inside `initGame()`. I established a strict threshold check where the `Whale` is locked out early on, and triggers with a 40% probability *only* after the user crosses a score of 100. Otherwise, the game safely falls back to deploying the default `Enemy` (Shark) class.
 
-Whale appears only after score > 100
-Shark remains default enemy
-Enemy system was improved using a base Enemy class
+**Time lost:** ~30 minutes
 
-Time lost: ~30 minutes
+---
 
+### [2026-05-30] - Feature: Adding Whale Class & Resolving Player Visibility Bug
+
+**What I asked the AI:**
+I wanted to add a second, faster enemy type (a Whale) that deals more damage after the score reaches 100, and needed help separating conflicting CSS class names and fixing a bug where the player ship unexpectedly disappeared from the screen.
+
+**What it gave me:**
+An independent, optimized `Whale` class in `app.js` with its own `.whale` CSS selector. However, during the asset separation process, a CSS class conflict and dynamic layer priority issue caused the player ship (`.player`) to become invisible while the game logic was running in the background.
+
+**What was wrong:**
+1. **Asset Conflict:** The newly introduced styling collided with elements of the player object's rendering scheme due to duplicate classes in CSS.
+2. **Layering & Render Bug:** The player class lacked a dominant `z-index` layer and layout fallback, forcing it to render underneath the backdrop configuration or fail to bind the source image properly when the game initiated.
+
+**How I fixed it:**
+I completely refactored `style.css` to isolate `.enemy` (Shark) and `.whale` (Whale) into separate blueprints to avoid rendering confusion. To bring the ship back, I updated the `.player` CSS rules by assigning an explicit `z-index: 99` layer priority, establishing a clear dimension tree (`65px` by `45px`), and adding a safe responsive target class (`.player img`) to ensure the ship asset remains persistently visible on top of all active ocean layout nodes.
+
+**Time lost:** ~15 minutes
