@@ -47,3 +47,27 @@ During the transition from emojis to PNG images, fragments of the old positionin
 I completely wiped the conflicting `app.js` scripts and replaced them with a unified object-oriented structure where initialization, spawning timers, and collision loops are neatly separated and executed sequentially.
 
 **Time lost:** ~15 minutes
+
+2026-05-30 - Enemy spawning and game logic issues
+
+What I asked the AI:
+I shared my full JavaScript game code and asked if there was any logical problem.
+
+What it gave me:
+The AI explained that my enemy spawning logic was unbalanced and my Whale spawn condition was poorly structured. It also provided a rewritten version of the spawn system.
+
+What was wrong:
+
+Whale enemy only appeared under strict conditions and felt inconsistent in gameplay
+Game balance was not clear
+Code structure was mixed and not reusable
+
+How I fixed it:
+I changed the spawn logic so that:
+
+Whale appears only after score > 100
+Shark remains default enemy
+Enemy system was improved using a base Enemy class
+
+Time lost: ~30 minutes
+
