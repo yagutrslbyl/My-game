@@ -9,29 +9,53 @@
 <body>
 
     <div id="game-container">
-        <div id="start-screen" class="overlay">
-            <h1>🌊 Ocean Voyager: Survival</h1>
-            <p>Köpək balıqlarından qaç və dənizdə sağ qal!</p>
-            <p><strong>İdarəetmə:</strong> W, A, S, D və ya Ox düymələri</p>
-            <button id="start-btn">Oyunu Başlat 🚢</button>
-        </div>
-
-        <div id="game-over-screen" class="overlay hidden">
-            <h1>💥 GAME OVER!</h1>
-            <p>Gəminiz batdı...</p>
-            <p>Topladığınız Xal: <span id="final-score">0</span></p>
-            <p>Yüksək Xal: <span id="high-score">0</span></p>
-            <button id="restart-btn">Yenidən Başla 🔄</button>
-        </div>
 
         <div id="game-board">
+
+            <!-- Start Screen -->
+            <div id="start-screen" class="overlay">
+                <h1>🌊 Ocean Voyager: Survival</h1>
+                <p>Evade the sharks and whales!</p>
+                <p><strong>Controls:</strong> W, A, S, D or Arrow Keys</p>
+                <button id="start-btn">Start Game 🚢</button>
+            </div>
+
+            <!-- Game Over Screen -->
+            <div id="game-over-screen" class="overlay hidden">
+                <h1>💥 GAME OVER!</h1>
+                <p>Your ship has sunk...</p>
+
+                <p>
+                    Final Score:
+                    <span id="final-score">0</span>
+                </p>
+
+                <p>
+                    High Score:
+                    <span id="high-score">0</span>
+                </p>
+
+                <button id="restart-btn">Restart 🔄</button>
+            </div>
+
+            <!-- UI Panel -->
             <div id="ui-panel">
-                <div id="hp-display">❤️ HP: <span id="hp-value">100</span>%</div>
-                <div id="score-display">⭐ Score: <span id="score-value">0</span></div>
+                <div id="hp-display">
+                    ❤️ HP:
+                    <span id="hp-value">100</span>%
+                </div>
+
+                <div id="score-display">
+                    ⭐ Score:
+                    <span id="score-value">0</span>
+                </div>
             </div>
-            </div>
+
+        </div>
+
     </div>
 
     <script src="app.js"></script>
+
 </body>
 </html>

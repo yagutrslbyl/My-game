@@ -16,6 +16,7 @@ body {
 
 #game-container {
     text-align: center;
+    position: relative;
 }
 
 /* Oyun sahəsinin ölçüləri */
@@ -28,6 +29,9 @@ body {
     border: 4px solid #ffffff;
     box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.5);
 }
+
+/* --- Gəminin (Player) Şəkil Dizaynı --- */
+/* --- Gəminin (Player) Tam Görünən və Təhlükəsiz Dizaynı --- */
 
 /* --- Gəminin (Player) Yeni Dizaynı --- */
 .player {
@@ -70,22 +74,48 @@ body {
     transition: top 0.1s linear, left 0.1s linear;
 }
 
-/* --- Köpək Balığı (Enemy) Şəkil Dizaynı --- */
+/* --- Balaca Köpək Balığı (Enemy) Şəkil Dizaynı --- */
 .enemy {
-    width: 70px;  /* Köpək balığı gəmidən bir az böyük və qorxulu olsun */
-    height: 50px;
     position: absolute;
-    /* Düz və qəzəbli görünən köpək balığı şəkli */
+    width: 70px;  
+    height: 50px;
+    top: 0;
+    left: 0;
     background-image: url('https://img.icons8.com/stickers/100/shark.png');
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
-    
-    /* Gəmiyə doğru düz uzanması və sola baxması üçün tənzimləmə */
     transform: scaleX(1); 
-    
-    /* Sənin istədiyin o qəzəbli, qırmızı aura effekti */
-    filter: drop-shadow(-5px 0px 8px rgba(255, 0, 0, 0.8));
+    filter: drop-shadow(-5px 0px 8px rgba(255, 0, 0, 0.8)); /* Qırmızı aura effekti */
+    z-index: 4;
+}
+
+/* --- Böyük Sürətli Balina (Whale) Dizaynı --- */
+
+/* --- Böyük Balina (Whale) Dizaynı --- */
+.whale {
+    width: 80px;
+    height: 60px;
+    position: absolute;
+
+    background-color: transparent;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    transition: top 0.1s linear, left 0.1s linear;
+}
+
+/* Balina Emojisi */
+.whale::after {
+    content: "🐋";
+    font-size: 75px;
+
+    position: absolute;
+
+    /* Balina sağa baxsın */
+    transform: scaleX(1);
 }
 
 /* --- UI PANEL (Can və Xal) --- */
@@ -105,26 +135,27 @@ body {
 }
 
 #hp-display {
-    background-color: rgba(220, 38, 38, 0.6); /* Şəffaf qırmızı background */
+    background-color: rgba(220, 38, 38, 0.6); 
     padding: 5px 15px;
     border-radius: 20px;
     border: 1px solid #dc2626;
 }
 
 #score-display {
-    background-color: rgba(234, 179, 8, 0.6); /* Şəffaf sarı background */
+    background-color: rgba(234, 179, 8, 0.6); 
     padding: 5px 15px;
     border-radius: 20px;
     border: 1px solid #eab308;
 }
 
-
 /* --- OVERLAY EKRANLARI (Start & Game Over) --- */
 .overlay {
     position: absolute;
-    width: 800px;
-    height: 500px;
-    background-color: rgba(12, 35, 64, 0.95); /* Okean rəngində şəffaf fon */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(12, 35, 64, 0.95); 
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -132,7 +163,6 @@ body {
     color: white;
     font-family: sans-serif;
     z-index: 20;
-    border: 4px solid #ffffff;
 }
 
 .overlay h1 {
@@ -164,7 +194,6 @@ body {
     transform: scale(1.05);
 }
 
-/* Ekranları gizlətmək üçün klass */
 .hidden {
     display: none !important;
 }
