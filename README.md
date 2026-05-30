@@ -67,5 +67,5 @@ The game saves your all-time record score locally using the browser's `localStor
 
 ## 🔗 Project Links & Development Logs
 
-* **Live Game URL:** [Play Ocean Voyager Live on GitHub Pages](https://yourusername.github.io/your-repository-name/) *(Note: Replace with your actual live link)*
+* **Live Game URL:** [Play Ocean Voyager Live on GitHub Pages](https://yagutrslbyl.github.io/My-game/) *(Note: Replace with your actual live link)*
 * **Development Process Log:** [Read my AI_DIARY.md](./AI_DIARY.md)
